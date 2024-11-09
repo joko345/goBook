@@ -13,5 +13,5 @@ func main() {
 	r := mux.NewRouter()
 	routes.RegisterBookRoutes(r) //r akan digunakan untuk var router
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe("localhost:3306", r))
+	log.Fatal(http.ListenAndServe("localhost:8080", r)) //jalan di 3306
 }
