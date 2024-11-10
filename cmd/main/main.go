@@ -18,6 +18,7 @@ func main() {
 
 	r := mux.NewRouter()
 	routes.RegisterBookRoutes(r)
+	routes.RegisterLoginRoute(r)
 	handler := cors.AllowAll().Handler(r) // Middleware CORS untuk mengizinkan semua permintaan
 	http.Handle("/", handler)
 	log.Fatal(http.ListenAndServe("localhost:8080", handler))
