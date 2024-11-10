@@ -10,5 +10,6 @@ require (
 require (
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/rs/cors v1.11.1 // indirect
 
 )

@@ -57,7 +57,6 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Write(res)
 }
-
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	var UpdateBook = &models.Book{}
 	utils.ParseBody(r, UpdateBook) // menerima data baru dari dan parse ke json agar bisa dibaca sistem
@@ -68,6 +67,10 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("error while parsing")
 	}
 	bookDetails, db := models.GetBookById(ID)
+	if UpdateBook.ID != 0 {
+		// Pastikan ID baru diterima dan disimpan ke dalam db
+		bookDetails.ID = UpdateBook.ID // Mengizinkan perubahan ID
+	}
 	if UpdateBook.Name != "" {
 		bookDetails.Name = UpdateBook.Name
 	}
@@ -77,9 +80,11 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	if UpdateBook.Rilis != "" {
 		bookDetails.Rilis = UpdateBook.Rilis
 	}
-	db.Save(&bookDetails)
+
+	// Save the updated book, including the updated ID
+	db.Save(&bookDetails) // Save akan memperbarui data dengan ID baru yang diubah
 	res, _ := json.Marshal(bookDetails)
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }

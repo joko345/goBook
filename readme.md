@@ -5,3 +5,5 @@ go mod tidy //memastikan semua dependecies terinstall
 
 cd cmd
 cd main
+CD book-crud
+npm start
