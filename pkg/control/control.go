@@ -68,8 +68,7 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	}
 	bookDetails, db := models.GetBookById(ID)
 	if UpdateBook.ID != 0 {
-		// Pastikan ID baru diterima dan disimpan ke dalam db
-		bookDetails.ID = UpdateBook.ID // Mengizinkan perubahan ID
+		bookDetails.ID = UpdateBook.ID
 	}
 	if UpdateBook.Name != "" {
 		bookDetails.Name = UpdateBook.Name
@@ -87,4 +86,37 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
+}
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+	// Set response header
+	w.Header().Set("Content-Type", "application/json")
+
+	// Parse request body untuk mengambil username dan password
+	var creds map[string]string
+	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	// Ambil username dan password dari body request
+	username := creds["username"]
+	password := creds["password"]
+
+	// Cari user berdasarkan username
+	user, err := models.GetUserByUsername(username)
+	if err != nil {
+		http.Error(w, "User not found", http.StatusUnauthorized)
+		return
+	}
+
+	// Verifikasi password dengan yang ada di database (langsung dibandingkan)
+	if user.Password != password {
+		http.Error(w, "Invalid password", http.StatusUnauthorized)
+		return
+	}
+
+	// Jika login berhasil, kirimkan response sukses
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Login successful"})
 }
